@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Results Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-chart-pie"></i>
+                <h1>Exam Results Analyzer</h1>
+            </div>
+            <p class="subtitle">Upload Excel files to generate comprehensive reports and visualizations</p>
+        </header>
+
+        <!-- Upload Section -->
+        <section id="upload-section" class="upload-section">
+            <div class="upload-area" id="upload-area">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h3>Drag & Drop Excel File Here</h3>
+                <p>or click to browse</p>
+                <input type="file" id="file-input" accept=".xlsx,.xls" hidden>
+                <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
+                    <i class="fas fa-folder-open"></i> Choose File
+                </button>
+            </div>
+            <div class="file-info" id="file-info"></div>
+        </section>
+
+        <!-- Dashboard Section (Hidden until file is loaded) -->
+        <section id="dashboard-section" class="dashboard-section hidden">
+            <!-- Batch Info -->
+            <div class="batch-info" id="batch-info">
+                <h2><i class="fas fa-graduation-cap"></i> <span id="batch-name">Batch Information</span></h2>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="total-students">0</h3>
+                        <p>Total Students</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="avg-marks">0</h3>
+                        <p>Average Marks</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon gold">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="highest-marks">0</h3>
+                        <p>Highest Marks</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon red">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="lowest-marks">0</h3>
+                        <p>Lowest Marks</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Stats Row -->
+            <div class="stats-grid stats-grid-3">
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="avg-subject">0</h3>
+                        <p>Avg Subject Marks</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon teal">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="avg-assessment">0</h3>
+                        <p>Avg Assessment Marks</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="pass-rate">0%</h3>
+                        <p>Pass Rate</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-pie"></i> Grade Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="grade-chart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-bar"></i> Marks Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="marks-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3><i class="fas fa-balance-scale"></i> Subject vs Assessment Marks</h3>
+                    <div class="chart-container">
+                        <canvas id="comparison-chart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3><i class="fas fa-medal"></i> Top 5 Performers</h3>
+                    <div class="chart-container">
+                        <canvas id="top-performers-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grade Summary Table -->
+            <div class="grade-summary-card">
+                <h3><i class="fas fa-table"></i> Grade Summary</h3>
+                <div class="grade-summary-grid" id="grade-summary"></div>
+            </div>
+
+            <!-- Data Table Section -->
+            <div class="table-card">
+                <div class="table-header">
+                    <h3><i class="fas fa-list"></i> Student Results</h3>
+                    <div class="table-controls">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-input" placeholder="Search students...">
+                        </div>
+                        <button class="btn btn-secondary" id="sort-btn">
+                            <i class="fas fa-sort"></i> Sort by Marks
+                        </button>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table id="results-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Student Name</th>
+                                <th>Registration No</th>
+                                <th>Subject Marks</th>
+                                <th>Assessment Marks</th>
+                                <th>Final Marks</th>
+                                <th>Grade</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions">
+                <button class="btn btn-primary" id="print-report-btn">
+                    <i class="fas fa-print"></i> Print Report
+                </button>
+                <button class="btn btn-secondary" id="new-file-btn">
+                    <i class="fas fa-file-upload"></i> Load New File
+                </button>
+            </div>
+        </section>
+
+        <!-- Print Report Section (Hidden, used for printing) -->
+        <section id="print-section" class="print-section">
+            <div class="print-header">
+                <h1>Exam Results Report</h1>
+                <p id="print-batch-name"></p>
+                <p id="print-date"></p>
+            </div>
+            <div class="print-stats" id="print-stats"></div>
+            <div class="print-charts-row">
+                <div class="print-chart-container">
+                    <h3>Grade Distribution</h3>
+                    <img id="print-grade-chart" alt="Grade Distribution Chart">
+                </div>
+                <div class="print-chart-container">
+                    <h3>Marks Distribution</h3>
+                    <img id="print-marks-chart" alt="Marks Distribution Chart">
+                </div>
+            </div>
+            <div class="print-grade-summary" id="print-grade-summary"></div>
+            <div class="print-table" id="print-table"></div>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
