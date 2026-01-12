@@ -1,0 +1,6 @@
+pandas
+openpyxl
+xlrd
+matplotlib
+reportlab
+pyinstaller
