@@ -95,8 +95,23 @@ st.markdown(f"""
     
     h1, h2, h3, h4, h5, h6 {{
         font-family: 'Outfit', sans-serif;
-        color: var(--text-primary) !important;
+        color: {theme_colors['text_primary']} !important;
         letter-spacing: -0.02em;
+    }}
+    
+    /* Force all markdown headings to use correct color */
+    [data-testid="stMarkdownContainer"] h1,
+    [data-testid="stMarkdownContainer"] h2,
+    [data-testid="stMarkdownContainer"] h3,
+    [data-testid="stMarkdownContainer"] h4,
+    [data-testid="stMarkdownContainer"] p,
+    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown p {{
+        color: {theme_colors['text_primary']} !important;
+    }}
+    
+    /* Labels and text */
+    label, .stTextInput label, span {{
+        color: {theme_colors['text_primary']} !important;
     }}
     
     /* Card Styling Wrapper */
