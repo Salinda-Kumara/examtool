@@ -1,0 +1,48 @@
+Shape: (164, 14)
+========================================================================================================================
+First 25 rows:
+========================================================================================================================
+R00: --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                
+R01: --                 | --                 | --                 | --                 | --                 | --                 | Course             | :                  | BSc in Applied Acc | --                 | --                 | --                 | --                 | --                
+R02: --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                
+R03: --                 | --                 | --                 | --                 | --                 | --                 | Exam               | :                  | 18A WE YII SI ESE  | --                 | --                 | --                 | --                 | --                
+R04: --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                
+R05: --                 | --                 | --                 | --                 | --                 | --                 | Subject            | :                  | Human Resource Man | --                 | --                 | --                 | --                 | --                
+R06: --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                
+R07: --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                
+R08: Semester Mark Shee | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                
+R09: --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                
+R10: #                  | Registration Numbe | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | Grade             
+R11: --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                
+R12: 1                  | BSc/2023-17B/MOHE/ | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | B+                
+R13: --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                
+R14: 2                  | BSc/2024-18A/MOHE/ | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | A                 
+R15: --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                
+R16: 3                  | BSc/2024-18A/WE-00 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | A                 
+R17: --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                
+R18: 4                  | BSc/2024-18A/WE-00 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | A+                
+R19: --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                
+R20: 5                  | BSc/2024-18A/WE-00 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | A                 
+R21: --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                
+R22: 6                  | BSc/2024-18A/WE-00 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | A                 
+R23: --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                
+R24: 7                  | BSc/2024-18A/WE-00 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | --                 | A                 
+
+========================================================================================================================
+Testing different header positions:
+========================================================================================================================
+
+Skipping 12 rows:
+  Columns: [1, 'BSc/2023-17B/MOHE/WE-024', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4', 'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7', 'Unnamed: 8', 'Unnamed: 9', 'Unnamed: 10', 'Unnamed: 11', 'Unnamed: 12', 'B+']
+  Shape: (5, 14)
+  First row: [np.float64(nan), nan, np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), nan]
+
+Skipping 13 rows:
+  Columns: ['Unnamed: 0', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4', 'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7', 'Unnamed: 8', 'Unnamed: 9', 'Unnamed: 10', 'Unnamed: 11', 'Unnamed: 12', 'Unnamed: 13']
+  Shape: (5, 14)
+  First row: [np.float64(2.0), 'BSc/2024-18A/MOHE/WD-002', np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), 'A']
+
+Skipping 14 rows:
+  Columns: [2, 'BSc/2024-18A/MOHE/WD-002', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4', 'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7', 'Unnamed: 8', 'Unnamed: 9', 'Unnamed: 10', 'Unnamed: 11', 'Unnamed: 12', 'A']
+  Shape: (5, 14)
+  First row: [np.float64(nan), nan, np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), np.float64(nan), nan]
