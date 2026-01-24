@@ -1,33 +1,36 @@
 # Deploying ExamTool to Ubuntu Server
 
 ## Prerequisites
-- **Docker** must be installed on your Ubuntu server.
-- **Git** (optional, if using git to transfer files).
+- **Docker** installed on your Ubuntu server.
+- **Git** installed on your Ubuntu server.
 
-## Step 1: Transfer Files
-Copy the following files to your Ubuntu server (e.g., into a folder named `examtool`):
-- `app.py`
-- `Dockerfile`
-- `requirements.txt`
-- `.dockerignore`
-- `deploy.sh` (created in the next step)
-- Your Excel files (`report.xls`, etc.)
-
-You can use `scp` (Secure Copy) from your Windows terminal:
-```powershell
-# Example command (replace user and ip)
-scp -r "C:\Users\salu\Desktop\examtool 2\examtool\*" user@192.168.1.10:/home/user/examtool/
-```
-
-## Step 2: Run Deployment Script
-On your Ubuntu server, navigate to the folder and run the deployment script:
+## Step 1: Clone the Repository
+On your Ubuntu server, clone the repository from GitHub:
 
 ```bash
-cd ~/examtool
+# Clone the repository (replace URL with your actual repo URL if different)
+git clone https://github.com/Salinda-Kumara/examtool.git
+cd examtool
+```
+
+## Step 2: Transfer Data Files
+Since Excel files and PDFs are ignored by Git (via `.gitignore`), you need to copy them manually to the `examtool` directory on your server:
+- `report.xls`
+- `report.pdf`
+
+You can use `scp` from your Windows machine:
+```powershell
+scp "C:\Users\salu\Desktop\examtool 2\examtool\report.xls" user@<server-ip>:~/examtool/
+```
+
+## Step 3: Run Deployment Script
+Make the script executable and run it:
+
+```bash
 chmod +x deploy.sh
 ./deploy.sh
 ```
 
-## Step 3: Access the App
+## Step 4: Access the App
 Open your browser and navigate to:
 `http://<your-ubuntu-server-ip>:5000`
