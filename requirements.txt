@@ -6,3 +6,4 @@ reportlab
 scipy
 openpyxl
 xlrd
+pdfplumber
