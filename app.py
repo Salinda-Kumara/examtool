@@ -10,6 +10,10 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from datetime import datetime
 import os
+try:
+    from scipy.interpolate import make_interp_spline
+except ImportError:
+    make_interp_spline = None
 
 # Page configuration
 st.set_page_config(
@@ -241,32 +245,28 @@ def create_grade_chart(distribution_df):
         x_pos = np.arange(len(chart_data))
         y_vals = chart_data['Count'].values
         
-        # Create a Statistical Trend Line (Polynomial Regression)
-        # This models the general trend/shape of the distribution
-        if len(x_pos) > 1:
+        # Use simple plot for small number of points or if scipy is missing
+        if len(x_pos) > 2 and make_interp_spline is not None:
             try:
-                # Degree 4 captures the complexity of grade distributions well (bimodal etc)
-                # without over-fitting like a raw line
-                degree = min(4, len(x_pos)-1)
-                z = np.polyfit(x_pos, y_vals, degree)
-                p = np.poly1d(z)
+                # Create a smooth B-spline
+                spline = make_interp_spline(x_pos, y_vals, k=3)  # Cubic spline
                 
                 x_smooth = np.linspace(x_pos.min(), x_pos.max(), 300)
-                y_smooth = p(x_smooth)
+                y_smooth = spline(x_smooth)
                 
                 # Ensure line doesn't dip below 0
                 y_smooth = np.maximum(y_smooth, 0)
                 
-                ax1.plot(x_smooth, y_smooth, color='#b45309', linewidth=3, linestyle='-', zorder=3)
+                ax1.plot(x_smooth, y_smooth, color='#b45309', linewidth=2, linestyle='-', zorder=3)
             except Exception:
                  # Fallback
-                ax1.plot(x_pos, y_vals, color='#b45309', linewidth=3, zorder=3)
+             ax1.plot(x_pos, y_vals, color='#b45309', linewidth=2, zorder=3)
         else:
-             ax1.plot(x_pos, y_vals, color='#b45309', linewidth=3, zorder=3)
+             ax1.plot(x_pos, y_vals, color='#b45309', linewidth=2, zorder=3)
     else:
         # Fallback for single/two points
         ax1.plot(chart_data['Grade'], chart_data['Count'], color='#b45309', marker='o', 
-                 linewidth=3, markersize=8, markerfacecolor='white', 
+                 linewidth=2, markersize=8, markerfacecolor='white', 
                  markeredgewidth=2, markeredgecolor='#b45309', zorder=3)
     
     ax1.set_xlabel('Grade', fontsize=11, fontweight='bold')
@@ -311,30 +311,28 @@ def create_grade_chart_pdf(distribution_df):
         x_pos = np.arange(len(chart_data))
         y_vals = chart_data['Count'].values
         
-        # Create a Statistical Trend Line (Polynomial Regression)
-        if len(x_pos) > 1:
+        # Use simple plot for small number of points or if scipy is missing
+        if len(x_pos) > 2 and make_interp_spline is not None:
             try:
-                # Degree 4 for accurate trend modeling
-                degree = min(4, len(x_pos)-1)
-                z = np.polyfit(x_pos, y_vals, degree)
-                p = np.poly1d(z)
+                # Create a smooth B-spline
+                spline = make_interp_spline(x_pos, y_vals, k=3)
                 
                 x_smooth = np.linspace(x_pos.min(), x_pos.max(), 300)
-                y_smooth = p(x_smooth)
+                y_smooth = spline(x_smooth)
                 
                 # Ensure line doesn't dip below 0
                 y_smooth = np.maximum(y_smooth, 0)
                 
-                ax.plot(x_smooth, y_smooth, color='#b45309', linewidth=3, linestyle='-', zorder=3)
+                ax.plot(x_smooth, y_smooth, color='#b45309', linewidth=2, linestyle='-', zorder=3)
             except Exception:
                 # Fallback
-                ax.plot(x_pos, y_vals, color='#b45309', linewidth=3, zorder=3)
+             ax.plot(x_pos, y_vals, color='#b45309', linewidth=2, zorder=3)
         else:
-             ax.plot(x_pos, y_vals, color='#b45309', linewidth=3, zorder=3)
+             ax.plot(x_pos, y_vals, color='#b45309', linewidth=2, zorder=3)
     else:
         # Fallback for single point
         ax.plot(chart_data['Grade'], chart_data['Count'], color='#b45309', marker='o', 
-                linewidth=3, markersize=8, markerfacecolor='white', 
+                linewidth=2, markersize=8, markerfacecolor='white', 
                 markeredgewidth=2, markeredgecolor='#b45309', zorder=3)
     
     ax.set_xlabel('Grade', fontsize=12, fontweight='bold')
@@ -360,14 +358,19 @@ def generate_pdf_report(df, metadata, distribution_df):
     
     # Title
     title_style = ParagraphStyle('Title', parent=styles['Heading1'],
-        fontSize=22, textColor=colors.HexColor('#1e3a8a'), alignment=TA_CENTER, 
+        fontSize=24, textColor=colors.HexColor('#1e3a8a'), alignment=TA_CENTER, 
+        spaceAfter=5, fontName='Helvetica-Bold')
+    
+    report_type_style = ParagraphStyle('ReportType', parent=styles['Heading2'],
+        fontSize=16, textColor=colors.HexColor('#334155'), alignment=TA_CENTER, 
         spaceAfter=10, fontName='Helvetica-Bold')
     
     subtitle_style = ParagraphStyle('Subtitle', parent=styles['Normal'],
-        fontSize=12, textColor=colors.HexColor('#64748b'), alignment=TA_CENTER, 
+        fontSize=11, textColor=colors.HexColor('#64748b'), alignment=TA_CENTER, 
         spaceAfter=20)
     
-    elements.append(Paragraph("Semester Mark Sheet Report", title_style))
+    elements.append(Paragraph("SAB Campus of CA Sri Lanka", title_style))
+    elements.append(Paragraph("Semester Mark Sheet Report", report_type_style))
     elements.append(Paragraph(f"Generated on {datetime.now().strftime('%B %d, %Y at %I:%M %p')}", subtitle_style))
     elements.append(Spacer(1, 5))
     
@@ -473,6 +476,8 @@ def generate_pdf_report(df, metadata, distribution_df):
         canvas.setFont('Helvetica', 8)
         canvas.setFillColor(colors.HexColor('#64748b'))
         canvas.drawString(40, 25, f"Generated by {os.getenv('USERNAME', 'User')} on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        canvas.setFont('Helvetica', 7)
+        canvas.drawString(40, 15, "Dev@Salinda")
         canvas.restoreState()
     
     doc.build(elements, onFirstPage=add_footer, onLaterPages=add_footer)

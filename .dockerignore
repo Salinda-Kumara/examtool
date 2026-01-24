@@ -1,0 +1,12 @@
+.git
+.venv
+__pycache__
+*.pdf
+*.xls
+*.xlsx
+*.bat
+analysis_output.txt
+excel_structure.txt
+pdf_extracted_data.txt
+verify_chart_logic.py
+launcher.py
