@@ -129,27 +129,41 @@ def parse_semester_marksheet(file):
         # Read the entire file without headers
         df_raw = pd.read_excel(file, header=None)
         
-        # Extract metadata from specific rows
-        course = str(df_raw.iloc[1, 8]) if not pd.isna(df_raw.iloc[1, 8]) else "Unknown Course"
-        exam = str(df_raw.iloc[3, 8]) if not pd.isna(df_raw.iloc[3, 8]) else "Unknown Exam"
-        subject = str(df_raw.iloc[5, 8]) if not pd.isna(df_raw.iloc[5, 8]) else "Unknown Subject"
+        # Dynamically extract metadata by searching the first 15 rows
+        course, exam, subject = "Unknown Course", "Unknown Exam", "Unknown Subject"
+        for i in range(min(15, len(df_raw))):
+            for j in range(df_raw.shape[1]):
+                val = str(df_raw.iloc[i, j]).strip().lower()
+                if val.startswith('course'):
+                    for k in range(j+1, df_raw.shape[1]):
+                        c_val = str(df_raw.iloc[i, k]).strip()
+                        if not pd.isna(df_raw.iloc[i, k]) and c_val not in [':', '', 'nan']:
+                            course = c_val
+                            break
+                elif val.startswith('exam'):
+                    for k in range(j+1, df_raw.shape[1]):
+                        c_val = str(df_raw.iloc[i, k]).strip()
+                        if not pd.isna(df_raw.iloc[i, k]) and c_val not in [':', '', 'nan']:
+                            exam = c_val
+                            break
+                elif val.startswith('subject'):
+                    for k in range(j+1, df_raw.shape[1]):
+                        c_val = str(df_raw.iloc[i, k]).strip()
+                        if not pd.isna(df_raw.iloc[i, k]) and c_val not in [':', '', 'nan']:
+                            subject = c_val
+                            break
         
-        # Read student data starting from row 12 (0-indexed)
-        # Every student has 2 rows: data row and blank row
+        # Read student data starting from row 8 (0-indexed) to accommodate different formats
         students = []
-        for i in range(12, len(df_raw), 2):
+        for i in range(8, len(df_raw)):
             # Validate this is a student record row
             student_num = df_raw.iloc[i, 0]
             reg_num = df_raw.iloc[i, 1]
             grade = df_raw.iloc[i, 13]
             
-            # Only include if:
-            # 1. Student number exists and is numeric
-            # 2. Registration number exists and is not empty
-            # 3. Grade exists
+            # Skip empty rows instead of breaking, as formats can vary
             if pd.isna(student_num) or pd.isna(reg_num):
-                # Stop when we hit rows without student number or registration number
-                break
+                continue
             
             # Validate student number is numeric (keep as string for display)
             try:
